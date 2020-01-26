@@ -40,6 +40,7 @@ You are almost done, only a few steps left:
 
 ### Scripts in `package.json`
 Several npm scripts are predefined for your convenience. You can run them using `npm run <scriptname>`
+
 | Script name | Description                                              |
 |-------------|----------------------------------------------------------|
 | `test:js`   | Executes the tests you defined in `*.test.js` files.     |
