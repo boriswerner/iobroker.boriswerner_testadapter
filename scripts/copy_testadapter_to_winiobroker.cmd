@@ -1,0 +1,2 @@
+copy ..\lib\* "C:\Program Files\iobroker\winiobroker\node_modules\iobroker.boriswerner_testadapter\lib\"
+copy ..\main.js* "C:\Program Files\iobroker\winiobroker\node_modules\iobroker.boriswerner_testadapter\"

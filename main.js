@@ -10,7 +10,7 @@ const utils = require("@iobroker/adapter-core");
 // Load your modules here, e.g.:
 // const fs = require("fs");
 
-const maphelp = require('./lib/mapHelper');
+const mapHelper = require("./lib/mapHelper");
 
 class BoriswernerTestadapter extends utils.Adapter {
 
@@ -36,26 +36,82 @@ class BoriswernerTestadapter extends utils.Adapter {
         // Initialize your adapter here
 
         // The adapters config (in the instance object everything under the attribute "native") is accessible via
-        // this.config:
-        this.log.info("config option1: " + this.config.option1);
-        this.log.info("config option2: " + this.config.option2);
+        // // this.config:
+        // this.log.info("config option1: " + this.config.option1);
+        // this.log.info("config option2: " + this.config.option2);
 
         /*
         For every state in the system there has to be also an object of type state
         Here a simple template for a boolean variable named "testVariable"
-        Because every adapter instance uses its own unique namespace variable names can't collide with other adapters variables
-        */
-        await this.setObjectAsync("testVariable", {
-            type: "state",
-            common: {
-                name: "testVariable",
-                type: "boolean",
-                role: "indicator",
-                read: true,
-                write: true,
-            },
-            native: {},
-        });
+        Because every adapter instance uses its own unique namespace variable names can"t collide with other adapters variables
+        // */
+        // await this.setObjectAsync("testVariable", {
+        //     type: "state",
+        //     common: {
+        //         name: "testVariable",
+        //         type: "boolean",
+        //         role: "indicator",
+        //         read: true,
+        //         write: true,
+        //     },
+        //     native: {},
+        // });
+
+        this.createChannelNotExists("map", "Maps");
+        let json = {};
+
+        //initial map setup
+        json = { "maps":[{ "mapID": "1260001017", "mapIndex": 0, "mapStatus": 1, "mapIsCurrentMap": 0, "mapIsBuilt": 1, "mapName": "EG" }
+            , { "mapID": "1307200506", "mapIndex": 1, "mapStatus": 1, "mapIsCurrentMap": 1, "mapIsBuilt": 1, "mapName": "OG" }] };
+        mapHelper.processMaps(this, json);
+        json = { "mapID": "1260001017", "mapSetID": "208", "mapSpotAreas": [{ "mapSpotAreaID": "1" }, { "mapSpotAreaID": "4" }] } ;
+        mapHelper.processSpotAreas(this, json);
+        json = { "mapID": "1307200506", "mapSetID": "207", "mapSpotAreas": [{ "mapSpotAreaID": "0" }, { "mapSpotAreaID": "1" }, { "mapSpotAreaID": "2" }] } ;
+        mapHelper.processSpotAreas(this, json);
+        json = { "mapSpotAreaID": "1", "mapSpotAreaName": "Wohnzimmer", "mapID": "1260001017" } ;
+        mapHelper.processSpotAreaInfo(this, json);
+        json = { "mapSpotAreaID": "4", "mapSpotAreaName": "Flur", "mapID": "1260001017" } ;
+        mapHelper.processSpotAreaInfo(this, json);
+        json = { "mapSpotAreaID": "0", "mapSpotAreaName": "A", "mapID": "1307200506" } ;
+        mapHelper.processSpotAreaInfo(this, json);
+        json = { "mapSpotAreaID": "1", "mapSpotAreaName": "B", "mapID": "1307200506" } ;
+        mapHelper.processSpotAreaInfo(this, json);
+        json = { "mapSpotAreaID": "2", "mapSpotAreaName": "C", "mapID": "1307200506" } ;
+        mapHelper.processSpotAreaInfo(this, json);
+
+        // //change map name of 1307200506 and remove map 1260001017
+        // json = { "maps":[{ "mapID": "1307200506", "mapIndex": 1, "mapStatus": 1, "mapIsCurrentMap": 1, "mapIsBuilt": 1, "mapName": "Obergeschoss" }] };
+        // mapHelper.processMaps(this, json);
+        
+        // //remove spotArea 1 and rename spotArea 2
+        // json = { "mapID": "1307200506", "mapSetID": "207", "mapSpotAreas": [{ "mapSpotAreaID": "0" }, { "mapSpotAreaID": "2" }] } ;
+        // mapHelper.processSpotAreas(this, json);
+        // json = { "mapSpotAreaID": "0", "mapSpotAreaName": "A", "mapID": "1307200506" } ;
+        // mapHelper.processSpotAreaInfo(this, json);
+        // json = { "mapSpotAreaID": "2", "mapSpotAreaName": "Schlafzimmer", "mapID": "1307200506" } ;
+        // mapHelper.processSpotAreaInfo(this, json);
+
+        // //reactivate map 1260001017 with different status and Name, spotArea 4 (Flur) removed and 3 (Küche) added
+        // json = { "maps":[{ "mapID": "1260001017", "mapIndex": 0, "mapStatus": 2, "mapIsCurrentMap": 0, "mapIsBuilt": 1, "mapName": "Erdgeschoss" }
+        //     , { "mapID": "1307200506", "mapIndex": 1, "mapStatus": 1, "mapIsCurrentMap": 1, "mapIsBuilt": 1, "mapName": "Obergeschoss" }] };
+        // mapHelper.processMaps(this, json);
+        // json = { "mapID": "1260001017", "mapSetID": "208", "mapSpotAreas": [{ "mapSpotAreaID": "1" }, { "mapSpotAreaID": "3" }] } ;
+        // mapHelper.processSpotAreas(this, json);
+        // json = { "mapSpotAreaID": "1", "mapSpotAreaName": "Wohnzimmer", "mapID": "1260001017" } ;
+        // mapHelper.processSpotAreaInfo(this, json);
+        // json = { "mapSpotAreaID": "3", "mapSpotAreaName": "Küche", "mapID": "1260001017" } ;
+        // mapHelper.processSpotAreaInfo(this, json);
+
+
+        
+        // //reactivate spotArea 4 (Flur)  and 3 (Küche) removed
+        // json = { "mapID": "1260001017", "mapSetID": "208", "mapSpotAreas": [{ "mapSpotAreaID": "1" }, { "mapSpotAreaID": "4" }] } ;
+        // mapHelper.processSpotAreas(this, json);
+        // json = { "mapSpotAreaID": "1", "mapSpotAreaName": "Wohnzimmer", "mapID": "1260001017" } ;
+        // mapHelper.processSpotAreaInfo(this, json);
+        // json = { "mapSpotAreaID": "4", "mapSpotAreaName": "Flur", "mapID": "1260001017" } ;
+        // mapHelper.processSpotAreaInfo(this, json);
+
 
         // in this template all states changes inside the adapters namespace are subscribed
         this.subscribeStates("*");
@@ -81,10 +137,6 @@ class BoriswernerTestadapter extends utils.Adapter {
         // result = await this.checkGroupAsync("admin", "admin");
         // this.log.info("check group user admin group admin: " + result);
 
-        
-        this.mapHelper = new maphelp.MapHelper(this);
-        const maps = 'Maps { [{ "mapID": "1260001067", "mapIndex": 0, "mapStatus": 1, "mapIsCurrentMap": 0, "mapIsBuilt": 1, "mapName": "EG" }, { "mapID": "1307200506", "mapIndex": 1, "mapStatus": 1, "mapIsCurrentMap": 1, "mapIsBuilt": 1, "mapName": "OG" }] } ';
-        this.mapHelper.processMaps(maps);
 
     }
 
@@ -148,6 +200,32 @@ class BoriswernerTestadapter extends utils.Adapter {
     // 	}
     // }
 
+
+    async createChannelNotExists(id, name) {
+        this.setObjectNotExists(id, {
+            type: "channel",
+            common: {
+                name: name
+            },
+            native: {}
+        });
+    }
+    
+    async createObjectNotExists(id, name, type, role, write, def, unit) {
+        this.setObjectNotExists(id, {
+            type: "state",
+            common: {
+                name: name,
+                type: type,
+                role: role,
+                read: true,
+                write: write,
+                def: def,
+                unit: unit
+            },
+            native: {}
+        });
+    }
 }
 
 // @ts-ignore parent is a valid property on module
